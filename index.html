@@ -1,85 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PLUS OU MOINS</title>
-  <style>
-    body {
-      background: linear-gradient(to bottom, #111, #222);
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLUS OU MOINS – Mobile</title>
+<style>
+body {
+  background: linear-gradient(to bottom, #111, #222);
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0; 
+  padding: 15px;
+}
 
-    h1 { font-size: 32px; margin: 20px 0 10px 0; }
-    h2 { font-size: 20px; margin: 10px 0 20px 0; }
+/* Titres */
+h1 { font-size: 36px; margin: 10px 0; }
+h2 { font-size: 24px; margin: 8px 0; }
 
-    input, button {
-      width: 100%;
-      box-sizing: border-box;
-      font-size: 18px;
-      padding: 12px;
-      margin: 6px 0;
-      border-radius: 10px;
-      border: none;
-    }
+/* Inputs et boutons */
+input, select, button {
+  font-size: 18px;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
 
-    button {
-      cursor: pointer;
-      background-color: #4CAF50;
-      color: white;
-      transition: background-color 0.3s;
-    }
+button {
+  cursor: pointer;
+  border: none;
+  color: white;
+  font-weight: bold;
+}
 
-    button:hover { background-color: #45a049; }
+button.plus { background: green; }
+button.moins { background: red; }
+button.reset { background: gray; }
 
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>PLUS OU MOINS</h1>
-  <h2>Devinez le nombre entre 1 et 100</h2>
-
-  <input type="number" id="guess" placeholder="Entrez votre nombre" min="1" max="100">
-  <button id="check">Vérifier</button>
-  <button id="restart">Recommencer</button>
-
-  <div id="result"></div>
-
-  <script>
-    let target = Math.floor(Math.random() * 100) + 1;
-
-    const guessInput = document.getElementById('guess');
-    const checkBtn = document.getElementById('check');
-    const restartBtn = document.getElementById('restart');
-    const resultDiv = document.getElementById('result');
-
-    checkBtn.addEventListener('click', () => {
-      const guess = parseInt(guessInput.value, 10);
-      if (!guess || guess < 1 || guess > 100) {
-        resultDiv.textContent = "Veuillez entrer un nombre entre 1 et 100.";
-        return;
-      }
-
-      if (guess < target) resultDiv.textContent = "Plus !";
-      else if (guess > target) resultDiv.textContent = "Moins !";
-      else resultDiv.textContent = `Bravo ! Le nombre était ${target}. 🎉`;
-    });
-
-    restartBtn.addEventListener('click', () => {
-      target = Math.floor(Math.random() * 100) + 1;
-      guessInput.value = '';
-      resultDiv.textContent = '';
-    });
-  </script>
-
-</body>
-</html>
+/* Table responsive */
+.table-container {
+  over
