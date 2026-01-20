@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PLUS OU MOINS – Mobile</title>
+<title>PLUS OU MOINS</title>
 
 <style>
 body {
@@ -12,14 +12,22 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 0;
-  padding: 10px;
+  padding: 12px;
 }
 
-h1 { font-size: 32px; }
-h2 { font-size: 20px; }
+h1 {
+  font-size: 32px;
+  margin: 10px 0;
+}
+
+h2 {
+  font-size: 20px;
+  margin: 8px 0;
+}
 
 input, select, button {
   width: 100%;
+  box-sizing: border-box;
   font-size: 18px;
   padding: 12px;
   margin: 6px 0;
@@ -27,123 +35,8 @@ input, select, button {
   border: none;
 }
 
-button { cursor: pointer; }
-
-.plus { background: green; color: white; }
-.moins { background: red; color: white; }
-.reset { background: #555; color: white; }
-
-.actions {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0;
+button {
+  cursor: pointer;
 }
 
-.actions button {
-  flex: 1;
-  font-size: 20px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-th, td {
-  border: 1px solid white;
-  padding: 6px;
-}
-
-th { background: #333; }
-
-.resultat {
-  font-size: 36px;
-  margin: 15px 0;
-  font-weight: bold;
-}
-</style>
-</head>
-<script>
-let joueurs = [];
-let manches = 0;
-
-function ajouterJoueur() {
-  const input = document.getElementById("nomJoueur");
-  const tbody = document.getElementById("table");
-
-  const nom = input.value.trim();
-  if (!nom) return;
-
-  const joueur = { nom, score: 0, pari: "plus", mise: 1 };
-  joueurs.push(joueur);
-  const index = joueurs.length - 1;
-
-  const tr = document.createElement("tr");
-
-  tr.innerHTML = `
-    <td>${nom}</td>
-    <td>
-      <select onchange="joueurs[${index}].pari=this.value">
-        <option value="plus">PLUS</option>
-        <option value="moins">MOINS</option>
-      </select>
-    </td>
-    <td>
-      <select onchange="joueurs[${index}].mise=parseInt(this.value)">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-    </td>
-    <td class="score">0</td>
-  `;
-
-  tbody.appendChild(tr);
-  input.value = "";
-}
-
-function validerManche(resultat) {
-  let max = -Infinity;
-  const tbody = document.getElementById("table");
-
-  joueurs.forEach(j => {
-    j.score += (j.pari === resultat ? j.mise : -j.mise);
-    if (j.score > max) max = j.score;
-  });
-
-  [...tbody.rows].forEach((row, i) => {
-    row.cells[3].textContent = joueurs[i].score;
-    row.style.background =
-      joueurs[i].score === max ? "#004400" : "";
-  });
-
-  manches++;
-  document.getElementById("manche").textContent = manches;
-
-  const affichage = document.getElementById("affichageResultat");
-  affichage.textContent = "RÉSULTAT : " + resultat.toUpperCase();
-  affichage.style.color = resultat === "plus" ? "lime" : "red";
-}
-
-function nouvellePartie() {
-  joueurs = [];
-  manches = 0;
-  document.getElementById("table").innerHTML = "";
-  document.getElementById("manche").textContent = "0";
-  document.getElementById("affichageResultat").textContent = "";
-}
-</script>
-
-<body>
-
-<h1>PLUS OU MOINS</h1>
-<h2>Manche : <span id="manche">0</span></h2>
-
-<input id="nomJoueur" placeholder="Nom du joueur">
-<button onclick="ajouterJoueur()">Ajouter joueur</button>
-
-<table>
-<thead>
-<
+button.p
