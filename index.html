@@ -3,42 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PLUS OU MOINS – Mobile</title>
+<title>PLUS OU MOINS – Mobile Plateau</title>
 <style>
+/* Style général */
 body {
   background: linear-gradient(to bottom, #111, #222);
   color: white;
   font-family: Arial, sans-serif;
-  text-align: center;
-  margin: 0; 
+  margin: 0;
   padding: 15px;
+  text-align: center;
 }
 
 /* Titres */
-h1 { font-size: 36px; margin: 10px 0; }
-h2 { font-size: 24px; margin: 8px 0; }
+h1 { font-size: 32px; margin: 10px 0; }
+h2 { font-size: 20px; margin: 8px 0; }
 
-/* Inputs et boutons */
-input, select, button {
+/* Inputs */
+input {
   font-size: 18px;
   padding: 10px;
-  margin: 5px 0;
+  margin: 8px 0;
   border-radius: 8px;
-  width: 100%;
+  width: 90%;
+  max-width: 300px;
   box-sizing: border-box;
-}
-
-button {
-  cursor: pointer;
   border: none;
-  color: white;
-  font-weight: bold;
 }
 
-button.plus { background: green; }
-button.moins { background: red; }
-button.reset { background: gray; }
+/* Table simplifiée pour mobile */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  margin: 10px 0;
+}
 
-/* Table responsive */
-.table-container {
-  over
+th, td {
+  border: 1px solid white;
+  padding: 6px;
+  text-align: center;
+}
+
+th {
+  background: #333;
+}
+
+/* Résultat de la manche */
+.resultat {
+  font-size: 40px;
+  font-weight: bold;
+  color: yellow;
+  margin: 20px 0;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  from { opacity: 1; }
+  to { opacity: 0.5; }
+}
+
+/* Gros boutons tactiles */
+button {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 20px;
+  margin: 10px 5px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  width: 45%;
+  max-width: 200px;
+}
+
+button.plus { background-color: green; color: white; }
+button.moins { background-color: red; color: white; }
+button.reset { background-color: gray; color: white; width: 95%; }
+
+/* Score */
+.score { font-weight: bold; font-size: 18px; }
+
+/* Responsive pour petits écrans */
+@media (max-width: 480px) {
+  h1 { font-size: 28px; }
+  h2 { font-size: 18px; }
+  .resultat { font-size: 32px; }
+  button { font-size: 20px; padding: 15px; width: 48%; }
+}
+</style>
+</head>
+<body>
+
+<h1>PLUS OU MOINS</h1>
+<h2>Manche : <span id="manche">0</span></h2>
+
+<input id="nomJoueur" placeholder="Nom du joueur">
+<button onclick="ajouterJoueur()">Ajouter joueur</button>
+
+<table>
+<thead>
+<tr>
+<th>Joueur</th>
+<th>Pari</th>
+<th>Mise</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+
+<div>
+  <button class="plus" onclick="validerManche('plus')">PLUS</button>
+  <button class="moins" onclick="validerManche('moins')">MOINS</button>
+</div>
+<br>
+<button class="reset" onclick="nouvellePartie()">Nouvelle Partie</button>
+
+<h1 id="affichageResultat" class="resultat"></h1>
+
+<script>
+let joueurs = [];
+let manches = 0;
+
+function ajouterJoueur() {
+  const nom = document.getElementById("nomJoueur").value.trim();
+  if (!nom) return;
+
+  const joueur = { nom, score: 0, pari: 'plus', mise: 1 };
+  joueurs.push(joueur);
+
+  const tbody = document.getElementById("table");
+  const tr = document.createElement("tr");
+
+  // Nom
+  const tdNom = document.createElement("td");
+  tdNom.textContent = nom;
+  tr.appendChild(tdNom);
+
+  // Pari
+  const tdPari = document.createElement("td");
+  const selectPari = document.createElement("select");
+  ['plus','moins'].forEach(val => {
+    const opt = document.createElement("option");
+    opt.value = val;
+    opt.textContent = val.toUpperCase();
+    selectPari.appendChild(opt);
+  });
+  selectPari.onchange = e => joueur.pari = e.target.value;
+  tdPari.appendChild(selectPari);
+  tr.appendChild(tdPari);
+
+  // Mise
+  const tdMise = document.createElement("td");
+  const selectMise = document.createElement("select");
+  [1,2,3].forEach(val => {
+    const opt = document.createElement("option");
+    opt.value = val;
+    opt.textContent = val;
+    selectMise.appendChild(opt);
+  });
+  selectMise.onchange = e => joueur.mise = Number(e.target.value);
+  tdMise.appendChild(selectMise);
+  tr.appendChild(tdMise);
+
+  // Score
+  const tdScore = document.createElement("td");
+  tdScore.textContent = joueur.score;
+  tdScore.classList.add("score");
+  tr.appendChild(tdScore);
+
+  tbody.appendChild(tr);
+  document.getElementById("nomJoueur").value = "";
+}
+
+function validerManche(resultat) {
+  let maxScore = -Infinity;
+  
+  joueurs.forEach(j => {
+    if (j.pari === resultat) j.score += j.mise;
+    else j.score -= j.mise;
+    if (j.score > maxScore) maxScore = j.score;
+  });
+
+  const tbody = document.getElementById("table");
+  for (let i = 0; i < joueurs.length; i++) {
+    const tr = tbody.rows[i];
+    tr.cells[3].textContent = joueurs[i].score;
+    tr.style.background = joueurs[i].score === maxScore ? "#004400" : (i % 2 === 0 ? "#111" : "#222");
+  }
+
+  manches++;
+  document.getElementById("manche").textContent = manches;
+
+  const affichage = document.getElementById("affichageResultat");
+  affichage.textContent = "RÉSULTAT : " + resultat.toUpperCase();
+  affichage.style.color = resultat === 'plus' ? 'lime' : 'red';
+}
+
+function nouvellePartie() {
+  if (!confirm("Réinitialiser le jeu ?")) return;
+  joueurs = [];
+  manches = 0;
+  document.getElementById("table").innerHTML = "";
+  document.getElementById("manche").textContent = 0;
+  document.getElementById("affichageResultat").textContent = "";
+}
+</script>
+
+</body>
+</html>
